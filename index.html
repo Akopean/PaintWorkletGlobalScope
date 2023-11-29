@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #fff;
+      }
+
+      .worklet-canvas {
+        --blob-seed: 123429;
+        --blob-num-points: 8;
+        --blob-variance: 0;
+        --blob-smoothness: 1;
+        --blob-fill: #48cb8a;
+
+        width: 100vmax;
+        height: 100vmin;
+
+        background-image: paint(blob);
+      }
+
+      .worklet-canvas {
+        --tick: 928;
+        --mouse-x: 1739;
+        --mouse-y: 685;
+        --bg-color: #f3f4f6;
+        --dot-color: #000;
+        background: var(--bg-color);
+        background: paint(generateddots);
+      }
+
+      .worklet-canvas:hover {
+        background: paint(dots);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="worklet-canvas"></div>
+
+    <script type="module">
+       /* import gsap from "https://cdn.skypack.dev/gsap@3.7.0";
+
+        (async function () {
+          if (CSS["paintWorklet"] === undefined) {
+            await import("https://unpkg.com/css-paint-polyfill");
+          }
+
+          CSS.paintWorklet.addModule(
+            "https://unpkg.com/@georgedoescode/houdini-random-blobs"
+          );
+        })();
+
+        gsap.to(".worklet-canvas", {
+          "--blob-variance": 1,
+          yoyo: true,
+          duration: 2,
+          repeat: -1,
+          repeatDelay: 0.25
+        });*/
+
+        document.addEventListener("DOMContentLoaded", () => {
+          if ("paintWorklet" in CSS) {
+            CSS.paintWorklet.addModule("dots.js");
+            CSS.paintWorklet.addModule("generated-dots.js");
+            CSS.paintWorklet.addModule("twinkle.js");
+          }
+
+          let root = document.getElementsByClassName('worklet-canvas');
+          let tick = 1;
+
+          setInterval(()=> {
+              root[0].style.setProperty('--tick', tick++);
+          }, 1e3);
+
+          root[0].addEventListener("mousemove", () => {
+            var e = window.event;
+            var posX = e.clientX;
+            var posY = e.clientY;
+            root[0].style.setProperty('--mouse-y', posY);
+            root[0].style.setProperty('--mouse-x', posX);
+          });
+
+      });
+    </script>
+  </body>
+</html>
